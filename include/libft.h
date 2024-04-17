@@ -6,7 +6,7 @@
 /*   By: jcummins <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 12:38:35 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/16 20:46:24 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:42:39 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,17 +78,17 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 //		ft_printf
-int	format(va_list arg, char c);
-int	ft_printf(const char *str, ...);
+int		format(va_list arg, char c);
+int		ft_printf(const char *str, ...);
 /* nformats */
-int	print_ptr(void *ptr);
-int	print_int(int num);
-int	print_hex(unsigned int num, int cap);
-int	print_hex_ptr(unsigned long long num, int cap);
-int	print_usi(unsigned int num);
+int		print_ptr(void *ptr);
+int		print_int(int num);
+int		print_hex(unsigned int num, int cap);
+int		print_hex_ptr(unsigned long long num, int cap);
+int		print_usi(unsigned int num);
 /* cformats */
-int	print_str(char *str);
-int	print_char(char chr);
+int		print_str(char *str);
+int		print_char(char chr);
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 64

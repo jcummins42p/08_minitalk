@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 10:02:10 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/16 20:25:09 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:30:41 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,38 +119,3 @@ char	*get_next_line(int fd)
 	}
 	return (line);
 }
-
-void	print_file(int fd)
-{
-	char	*buf;
-
-	buf = get_next_line(fd);
-	if (buf)
-	{
-		printf("%s", buf);
-		free (buf);
-	}
-	else
-		return ;
-}
-
-/*int	main(int argc, char *argv[])*/
-/*{*/
-	/*int		fd;*/
-	/*int		i;*/
-
-	/*if (argc == 1)*/
-	/*{*/
-		/*printf("No file specified\n");*/
-		/*return (0);*/
-	/*}*/
-	/*i = 1;*/
-	/*while (argv[i])*/
-	/*{*/
-		/*fd = open(argv[i], O_RDONLY);*/
-		/*print_file(fd);*/
-		/*close (fd);*/
-		/*i++;*/
-	/*}*/
-	/*return (0);*/
-/*}*/
