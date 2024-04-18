@@ -6,28 +6,39 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:24:19 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/18 16:10:46 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/18 16:49:57 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-
-
-int	decode_char(const int *octet, char *buffer, int *buf_index)
+void	confirm()
 {
-	int				i;
+	/*(void)pid;*/
+	ft_printf("Signal sent successfully");
+}
+
+void	error()
+{
+	/*(void)pid;*/
+	ft_printf("Signal not sent successfully");
+}
+
+int	decode_binary(const int *octet, char *buffer, int *buf_index)
+{
+	int				*ptr;
 	unsigned char	c;
 
-	i = 0;
+	ptr = (int *)octet;
 	c = 0;
-	while (i < 8)
-		c = (c << 1) | octet[i++];
+	while (ptr < octet + 8)
+		c = (c << 1) | *(ptr++);
 	if (c == '\0')
 	{
 		write(1, buffer, *buf_index);
 		write(1, "\n", 1);
 		*buf_index = 0;
+		return(1);
 	}
 	else
 	{
@@ -37,9 +48,10 @@ int	decode_char(const int *octet, char *buffer, int *buf_index)
 		{
 			write(1, buffer, HBUFF_SIZE -1);
 			*buf_index = 0;
+			return (1);
 		}
 	}
-	return (1);
+	return (0);
 }
 
 void	handler_usr(int sig_num)
@@ -56,11 +68,11 @@ void	handler_usr(int sig_num)
 		octet[i++] = 1;
 	if (i == 8)
 	{
-		decode_char(octet, buffer, &buffer_index);
+		if (decode_binary(octet, buffer, &buffer_index))
+			confirm();
 		while (i > 0)
 			octet[--i] = -1;
 	}
-	/*fflush(stdout);*/
 }
 
 int	main(void)
