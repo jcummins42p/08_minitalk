@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:25:14 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/18 22:36:23 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/18 22:38:54 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	send_null(const int server_pid)
 	while (++i < 8)
 	{
 		kill(server_pid, SIGUSR1);
-		usleep(100);
+		pause();
 	}
 }
 
