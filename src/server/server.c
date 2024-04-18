@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:24:19 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/18 14:55:38 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:16:30 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int		decode_char(const int *octet)
 {
-	int		i;
-	char	c;
+	int				i;
+	unsigned char	c;
 
-	i = 1;
+	i = 0;
 	c = 0;
 	while (i < 8)
 	{
