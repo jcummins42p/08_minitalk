@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:25:14 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/18 15:01:10 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/18 16:13:22 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	send_null(const int server_pid)
 	while (++i < 8)
 	{
 		kill(server_pid, SIGUSR1);
-		usleep(1000);
+		usleep(500);
 	}
 }
 
@@ -46,7 +46,7 @@ void	send_char(const int server_pid, const char c)
 			kill(server_pid, SIGUSR1);
 		else if (octet[7 - i] == '1')
 			kill(server_pid, SIGUSR2);
-		usleep(1500);
+		usleep(500);
 	}
 }
 
