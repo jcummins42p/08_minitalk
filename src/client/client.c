@@ -6,11 +6,18 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:25:14 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/18 16:13:22 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/18 22:36:23 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+void	receive_continue(int sig_num, siginfo_t *info, void *context)
+{
+	(void)sig_num;
+	(void)info;
+	(void)context;
+}
 
 void	send_null(const int server_pid)
 {
@@ -20,7 +27,7 @@ void	send_null(const int server_pid)
 	while (++i < 8)
 	{
 		kill(server_pid, SIGUSR1);
-		usleep(500);
+		usleep(100);
 	}
 }
 
@@ -46,7 +53,7 @@ void	send_char(const int server_pid, const char c)
 			kill(server_pid, SIGUSR1);
 		else if (octet[7 - i] == '1')
 			kill(server_pid, SIGUSR2);
-		usleep(500);
+		pause();
 	}
 }
 
@@ -64,6 +71,13 @@ void	send_string(const int server_pid, const char *str)
 
 int	main(int argc, char *argv[])
 {
+	struct sigaction	new_action;
+
+	new_action.sa_sigaction = receive_continue;
+	sigemptyset (&new_action.sa_mask);
+	new_action.sa_flags = SA_SIGINFO;
+	sigaction (SIGUSR1, &new_action, NULL);
+	sigaction (SIGUSR2, &new_action, NULL);
 	if (argc < 3)
 	{
 		ft_printf("Please provide a valid server pid and string to send\n");
