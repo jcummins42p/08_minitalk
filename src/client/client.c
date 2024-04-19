@@ -6,32 +6,45 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:25:14 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/18 22:38:54 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/19 13:59:22 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
+size_t	g_bytes_sent = 0;
+
 void	receive_continue(int sig_num, siginfo_t *info, void *context)
 {
-	(void)sig_num;
+	static size_t	bytes_confirmed = 0;
+
 	(void)info;
 	(void)context;
+	if (sig_num == SIGUSR2)
+	{
+		bytes_confirmed++;
+		if (bytes_confirmed == g_bytes_sent)
+		{
+			ft_printf("Message sent succesfully\n");
+		}
+	}
 }
 
-void	send_null(const int server_pid)
+void	send_null(int *status, const int server_pid)
 {
 	size_t	i;
 
 	i = -1;
 	while (++i < 8)
 	{
-		kill(server_pid, SIGUSR1);
-		pause();
+		if (*status < 0)
+			return ;
+		*status = kill(server_pid, SIGUSR1);
+		usleep(10000);
 	}
 }
 
-void	send_char(const int server_pid, const char c)
+void	send_char(int *status, const int server_pid, const char c)
 {
 	char	octet[8];
 	int		val;
@@ -50,23 +63,31 @@ void	send_char(const int server_pid, const char c)
 	while (i-- > 0)
 	{
 		if (octet[7 - i] == '0')
-			kill(server_pid, SIGUSR1);
+			*status = (kill(server_pid, SIGUSR1));
 		else if (octet[7 - i] == '1')
-			kill(server_pid, SIGUSR2);
-		pause();
+			*status = (kill(server_pid, SIGUSR2));
+		if (*status < 0)
+			return ;
+		sleep(1);
 	}
 }
 
 void	send_string(const int server_pid, const char *str)
 {
-	size_t	len;
+	int		status;
 	size_t	i;
 
-	len = ft_strlen(str);
+	status = -1;
+	g_bytes_sent = ft_strlen(str);
 	i = 0;
-	while (i < len)
-		send_char(server_pid, str[i++]);
-	send_null(server_pid);
+	while (i < g_bytes_sent)
+		send_char(&status, server_pid, str[i++]);
+	send_null(&status, server_pid);
+	if (status < 0)
+	{
+		ft_printf("Pid %d not a valid server\n", server_pid);
+		exit(EXIT_FAILURE);
+	}
 }
 
 int	main(int argc, char *argv[])

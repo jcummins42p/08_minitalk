@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:27:25 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/18 15:56:14 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/19 12:03:01 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@
 # include <signal.h>
 # include "libft.h"
 
-# define HBUFF_SIZE 1024
+# define HBUFF_SIZE 10
 
 #endif
