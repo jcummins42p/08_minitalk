@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:24:19 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/19 17:55:01 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/19 21:45:20 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	reset_static(char *buffer, int *buffer_index, int *octet, int *i)
 {
-	ft_memset(buffer, 0, sizeof(buffer));
+	ft_memset(buffer, 0, HBUFF_SIZE);
 	ft_memset(octet, 0, sizeof(int) * 8);
 	*buffer_index = 0;
 	*i = 0;
@@ -41,7 +41,7 @@ int	decode_binary(int *octet, char *buffer, int *buf_index)
 		if (*buf_index >= HBUFF_SIZE)
 		{
 			write(1, buffer, HBUFF_SIZE);
-			*buf_index = 0;
+			return(0);
 		}
 		return (1);
 	}
@@ -67,11 +67,7 @@ void	receive_string(int sig_num, siginfo_t *info, void *context)
 	if (i == 8)
 	{
 		if (!decode_binary(octet, buffer, &buffer_index))
-		{
-			printf("\n%s\n", buffer);
 			reset_static(buffer, &buffer_index, octet, &i);
-			printf("\n%s\n", buffer);
-		}
 		if (kill(info->si_pid, SIGUSR2) == -1)
 			reset_static(buffer, &buffer_index, octet, &i);
 		i = 0;
@@ -82,14 +78,20 @@ int	main(void)
 {
 	pid_t				server_pid;
 	struct sigaction	minitalk;
+	sigset_t			blocked_signals;
 
-	server_pid = getpid();
-	ft_printf("Server pid:	%d\n", server_pid);
+	sigemptyset(&blocked_signals);
+	sigaddset(&blocked_signals, SIGUSR1);
+	sigaddset(&blocked_signals, SIGUSR2);
 	minitalk.sa_sigaction = receive_string;
-	sigemptyset (&minitalk.sa_mask);
+	sigemptyset(&minitalk.sa_mask);
+	sigaddset(&minitalk.sa_mask, SIGUSR1);
+	sigaddset(&minitalk.sa_mask, SIGUSR2);
 	minitalk.sa_flags = SA_SIGINFO;
 	sigaction (SIGUSR1, &minitalk, NULL);
 	sigaction (SIGUSR2, &minitalk, NULL);
+	server_pid = getpid();
+	ft_printf("Server pid:	%d\n", server_pid);
 	while (1)
 		pause();
 	return (0);
