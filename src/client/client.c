@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:25:14 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/19 13:59:22 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/19 15:43:02 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,9 @@ void	send_null(int *status, const int server_pid)
 		if (*status < 0)
 			return ;
 		*status = kill(server_pid, SIGUSR1);
-		usleep(10000);
+		sleep(1);
 	}
+	usleep(10000);
 }
 
 void	send_char(int *status, const int server_pid, const char c)
@@ -68,7 +69,7 @@ void	send_char(int *status, const int server_pid, const char c)
 			*status = (kill(server_pid, SIGUSR2));
 		if (*status < 0)
 			return ;
-		sleep(1);
+		sleep(3);
 	}
 }
 

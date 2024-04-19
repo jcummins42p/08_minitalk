@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:24:19 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/19 14:46:37 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/19 17:55:01 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,22 @@ void	receive_string(int sig_num, siginfo_t *info, void *context)
 	(void)context;
 	if (sig_num == SIGUSR1 || sig_num == SIGUSR2)
 	{
-		if (kill(info->si_pid, SIGUSR1) == -1)
-			reset_static(buffer, &buffer_index, octet, &i);
 		if (sig_num == SIGUSR1)
 			octet[i++] = 0;
 		else if (sig_num == SIGUSR2)
 			octet[i++] = 1;
+		if (kill(info->si_pid, SIGUSR1) == -1)
+			reset_static(buffer, &buffer_index, octet, &i);
 	}
 	if (i == 8)
 	{
-		if (kill(info->si_pid, SIGUSR2) == -1)
+		if (!decode_binary(octet, buffer, &buffer_index))
+		{
+			printf("\n%s\n", buffer);
 			reset_static(buffer, &buffer_index, octet, &i);
-		else if (!decode_binary(octet, buffer, &buffer_index))
+			printf("\n%s\n", buffer);
+		}
+		if (kill(info->si_pid, SIGUSR2) == -1)
 			reset_static(buffer, &buffer_index, octet, &i);
 		i = 0;
 	}
