@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:25:14 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/19 20:52:14 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/22 16:38:25 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,8 @@ void	send_null(int *status, const int server_pid)
 		if (*status < 0)
 			return ;
 		*status = kill(server_pid, SIGUSR1);
-		sleep(1);
+		pause();
 	}
-	usleep(10000);
 }
 
 void	send_char(int *status, const int server_pid, const char c)
@@ -93,20 +92,15 @@ void	send_string(const int server_pid, const char *str)
 
 int	main(int argc, char *argv[])
 {
-	struct sigaction	new_action;
+	struct sigaction	mt_client;
 
-	new_action.sa_sigaction = receive_continue;
-	sigemptyset (&new_action.sa_mask);
-	new_action.sa_flags = SA_SIGINFO;
-	sigaction (SIGUSR1, &new_action, NULL);
-	sigaction (SIGUSR2, &new_action, NULL);
+	mt_client.sa_sigaction = receive_continue;
+	mt_client.sa_flags = SA_SIGINFO;
+	sigaction (SIGUSR1, &mt_client, NULL);
+	sigaction (SIGUSR2, &mt_client, NULL);
 	if (argc < 3)
-	{
 		ft_printf("Please provide a valid server pid and string to send\n");
-	}
 	else if (argc == 3)
-	{
 		send_string(ft_atoi(argv[1]), argv[2]);
-	}
 	return (0);
 }

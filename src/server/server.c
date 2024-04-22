@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:24:19 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/19 21:45:20 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:36:21 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	decode_binary(int *octet, char *buffer, int *buf_index)
 		if (*buf_index >= HBUFF_SIZE)
 		{
 			write(1, buffer, HBUFF_SIZE);
-			return(0);
+			return (0);
 		}
 		return (1);
 	}
@@ -55,44 +55,40 @@ void	receive_string(int sig_num, siginfo_t *info, void *context)
 	static int	i = 0;
 
 	(void)context;
+	usleep(150);
 	if (sig_num == SIGUSR1 || sig_num == SIGUSR2)
 	{
 		if (sig_num == SIGUSR1)
 			octet[i++] = 0;
 		else if (sig_num == SIGUSR2)
 			octet[i++] = 1;
-		if (kill(info->si_pid, SIGUSR1) == -1)
-			reset_static(buffer, &buffer_index, octet, &i);
 	}
 	if (i == 8)
 	{
 		if (!decode_binary(octet, buffer, &buffer_index))
 			reset_static(buffer, &buffer_index, octet, &i);
-		if (kill(info->si_pid, SIGUSR2) == -1)
-			reset_static(buffer, &buffer_index, octet, &i);
-		i = 0;
+		else
+			i = 0;
+		kill(info->si_pid, SIGUSR2);
 	}
+	else
+		kill(info->si_pid, SIGUSR1);
 }
 
 int	main(void)
 {
 	pid_t				server_pid;
-	struct sigaction	minitalk;
-	sigset_t			blocked_signals;
+	struct sigaction	mt_server;
 
-	sigemptyset(&blocked_signals);
-	sigaddset(&blocked_signals, SIGUSR1);
-	sigaddset(&blocked_signals, SIGUSR2);
-	minitalk.sa_sigaction = receive_string;
-	sigemptyset(&minitalk.sa_mask);
-	sigaddset(&minitalk.sa_mask, SIGUSR1);
-	sigaddset(&minitalk.sa_mask, SIGUSR2);
-	minitalk.sa_flags = SA_SIGINFO;
-	sigaction (SIGUSR1, &minitalk, NULL);
-	sigaction (SIGUSR2, &minitalk, NULL);
+	mt_server.sa_sigaction = receive_string;
+	mt_server.sa_flags = SA_SIGINFO;
+	sigaction (SIGUSR1, &mt_server, NULL);
+	sigaction (SIGUSR2, &mt_server, NULL);
 	server_pid = getpid();
 	ft_printf("Server pid:	%d\n", server_pid);
 	while (1)
+	{
 		pause();
+	}
 	return (0);
 }
