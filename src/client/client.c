@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:25:14 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/22 16:38:25 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:01:09 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	send_null(int *status, const int server_pid)
 	size_t	i;
 
 	i = -1;
+
 	while (++i < 8)
 	{
 		if (*status < 0)
@@ -66,9 +67,9 @@ void	send_char(int *status, const int server_pid, const char c)
 			*status = (kill(server_pid, SIGUSR1));
 		else if (octet[7 - i] == '1')
 			*status = (kill(server_pid, SIGUSR2));
+		pause();
 		if (*status < 0)
 			return ;
-		pause();
 	}
 }
 

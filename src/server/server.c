@@ -6,7 +6,7 @@
 /*   By: jcummins <jcummins@student.42prague.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 17:24:19 by jcummins          #+#    #+#             */
-/*   Updated: 2024/04/22 19:36:21 by jcummins         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:08:53 by jcummins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	receive_string(int sig_num, siginfo_t *info, void *context)
 	static int	i = 0;
 
 	(void)context;
-	usleep(150);
+	usleep(100);
 	if (sig_num == SIGUSR1 || sig_num == SIGUSR2)
 	{
 		if (sig_num == SIGUSR1)
